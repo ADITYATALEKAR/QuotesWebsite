@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background-image: url('{{ url_for("static", filename="mountains.jpg") }}'); background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat;">
+
+    <h1>Quotes to Inspire</h1>
+    
+    <!-- Quote of the Day Button -->
+    <button onclick="showQuoteOfTheDay()" class="quote-of-the-day-btn">Quote of the Day</button>
+
+    <!-- Pop-up for "Quote of the Day" -->
+    <div id="quote-popup" class="quote-popup" style="display: none;">
+        <p id="popup-quote"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <!-- Buttons to Toggle Quotes and Essays -->
+    <button onclick="showQuotes()" class="toggle-btn">Show Quotes</button>
+    <button onclick="showEssays()" class="toggle-btn">Show Inspiring Essays</button>
+
+    <!-- Container for displaying quotes and essays -->
+    <div id="content-container">
+        {% for quote in quotes %}
+            <p class="quote">{{ quote }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- JavaScript for Quote of the Day functionality -->
+    <script>
+        // JavaScript variables for quotes and essays data
+        const quotes = {{ quotes | tojson }};
+        const essays = {{ essays | tojson }};
+
+        console.log("Quotes array loaded in JavaScript:", quotes);  // Debugging
+        console.log("Essays array loaded in JavaScript:", essays);  // Debugging
+
+        // Function to show a random "Quote of the Day" in a pop-up
+        function showQuoteOfTheDay() {
+            if (quotes.length === 0) {
+                console.error("Quotes array is empty!");  // Debugging
+                return;
+            }
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById("popup-quote").innerText = randomQuote;
+            document.getElementById("quote-popup").style.display = "block";
+        }
+
+        // Function to close the pop-up
+        function closePopup() {
+            document.getElementById("quote-popup").style.display = "none";
+        }
+
+        // Function to display all quotes
+        function showQuotes() {
+            document.getElementById("content-container").innerHTML = quotes.map(quote => `<p class="quote">${quote}</p>`).join('');
+        }
+
+        // Function to display all essays
+        function showEssays() {
+            document.getElementById("content-container").innerHTML = essays.map((essay, index) => `<p class="essay">Essay ${index + 1}: ${essay}</p>`).join('');
+        }
+    </script>
+</body>
+</html>
+
